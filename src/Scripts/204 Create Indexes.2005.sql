@@ -29,7 +29,8 @@ declare @c cursor,
 		@allow_page_locks bit,
 		@secondary_type_desc nvarchar(60),
 		@using_xml_index sysname,
-		@is_included_column bit
+		@is_included_column bit,
+		@filter_definition nvarchar(max)
 
 
 
@@ -55,7 +56,8 @@ select	i.object_id,
 		i.allow_row_locks,
 		i.allow_page_locks,
 		x.secondary_type_desc,
-		x2.name
+		x2.name,
+		i.filter_definition
 from	sys.indexes i
 join	sys.objects o
 on		i.object_id = o.object_id
@@ -67,7 +69,8 @@ on		x.object_id = i.object_id
 and		x2.index_id = x.using_xml_index_id
 join	sys.data_spaces d
 on		d.data_space_id = i.data_space_id
-where	(exists (
+where	(
+			exists (
 				--find any columns that have a collation specified
 				select	1
 				from	sys.index_columns ic
@@ -76,14 +79,29 @@ where	(exists (
 				and		ic.column_id = c.column_id
 				where	collation_name is not null 
 				and		c.object_id = i.object_id
-				and		ic.index_id = i.index_id) 
-				--{2} is the rebuild indexes option from application
-				OR {2} = 1)
+				and		ic.index_id = i.index_id
+			) 
+		OR 
+			--{2} is the rebuild indexes option from application
+			{2} = 1
+		OR
+			-- statistics on it may be schema-bound
+			i.has_filter <> 0
+		)
 and		o.is_ms_shipped = 0
-and		i.type <> 0 --dont care about heaps
+and		(
+			i.type <> 0 --dont care about heaps
+		OR
+			-- statistics on it may be schema-bound
+			i.has_filter <> 0
+		)
+and		i.is_hypothetical = 0		-- do not recreate hypothetical indexes, Data Tuning Advisor should have dropped them
+ORDER BY
+	o.name, i.name
+
 
 open @c
-fetch next from @c into @object_id, @index_id, @index_name, @schema_name, @table_name, @type, @type_desc, @is_unique, @data_space_name, @ignore_dup_key, @is_primary_key, @is_unique_constraint, @fill_factor, @is_padded, @is_disabled, @is_hypothetical, @allow_row_locks, @allow_page_locks, @secondary_type_desc, @using_xml_index
+fetch next from @c into @object_id, @index_id, @index_name, @schema_name, @table_name, @type, @type_desc, @is_unique, @data_space_name, @ignore_dup_key, @is_primary_key, @is_unique_constraint, @fill_factor, @is_padded, @is_disabled, @is_hypothetical, @allow_row_locks, @allow_page_locks, @secondary_type_desc, @using_xml_index, @filter_definition
 
 while @@fetch_status=0
 begin
@@ -179,6 +197,9 @@ begin
 		if len(@included_column_list)>0
 			set @text = @text + ' INCLUDE ('+@included_column_list+')'
 
+		if len(@filter_definition)>0
+			set @text = @text + ' WHERE '+@filter_definition+' '
+
 		set @text = @text +	' WITH ('
 
 		
@@ -206,7 +227,7 @@ begin
 
 	insert into #sql (sql) values (@text)
 	
-	fetch next from @c into @object_id, @index_id, @index_name, @schema_name, @table_name, @type, @type_desc, @is_unique, @data_space_name, @ignore_dup_key, @is_primary_key, @is_unique_constraint, @fill_factor, @is_padded, @is_disabled, @is_hypothetical, @allow_row_locks, @allow_page_locks, @secondary_type_desc, @using_xml_index
+	fetch next from @c into @object_id, @index_id, @index_name, @schema_name, @table_name, @type, @type_desc, @is_unique, @data_space_name, @ignore_dup_key, @is_primary_key, @is_unique_constraint, @fill_factor, @is_padded, @is_disabled, @is_hypothetical, @allow_row_locks, @allow_page_locks, @secondary_type_desc, @using_xml_index, @filter_definition
 end
 close @c
 deallocate @c

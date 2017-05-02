@@ -10,7 +10,8 @@ select	case when is_primary_key=1 OR is_unique_constraint=1
 from	sys.indexes i
 join	sys.objects o
 on		i.object_id = o.object_id
-where	(exists (
+where	(
+			exists (
 				--find any columns that have a collation specified
 				select	1
 				from	sys.index_columns ic
@@ -19,10 +20,21 @@ where	(exists (
 				and		ic.column_id = c.column_id
 				where	collation_name is not null 
 				and		c.object_id = i.object_id
-				and		ic.index_id = i.index_id) 
-				--{2} is the rebuild indexes option from application
-				OR {2} = 1)
+				and		ic.index_id = i.index_id
+			) 
+		OR
+			--{2} is the rebuild indexes option from application
+			{2} = 1
+		OR
+			-- statistics on it may be schema-bound
+			i.has_filter <> 0
+		)
 and		o.is_ms_shipped = 0
-and		i.type <> 0 --dont care about heaps
-
-
+and		(
+			i.type <> 0 --dont care about heaps
+		OR
+			-- statistics on it may be schema-bound
+			i.has_filter <> 0
+		)
+ORDER BY
+	o.name, i.name

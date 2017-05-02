@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>7.10.6030</ProductVersion>
@@ -9,14 +9,14 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon />
     <AssemblyKeyContainerName />
-    <AssemblyName>AlterCollation</AssemblyName>
+    <AssemblyName>ChangeCollation</AssemblyName>
     <AssemblyOriginatorKeyFile />
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>AlterCollation</RootNamespace>
+    <RootNamespace>ChangeCollation</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject />
     <FileUpgradeFlags>
@@ -25,7 +25,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>0.0</OldToolsVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -41,6 +41,10 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -102,6 +106,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="CollationChanger.cs">
       <SubType>Code</SubType>
@@ -136,11 +141,13 @@
     <Compile Include="Utils.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Content Include="ChangeCollation.htm" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx" />
     <EmbeddedResource Include="Scripts\001 Setup.sql" />
+    <EmbeddedResource Include="Scripts\002 Audit PKs and Unique Indexes.sql" />
     <EmbeddedResource Include="Scripts\002 Disable Triggers.sql" />
     <EmbeddedResource Include="Scripts\003 Drop Full Text.2000.sql" />
     <EmbeddedResource Include="Scripts\003 Drop Full Text.2005.sql" />
@@ -149,7 +156,7 @@
     <EmbeddedResource Include="Scripts\005 Drop Statistics.2005.sql" />
     <EmbeddedResource Include="Scripts\006 Drop Indexes.2005.sql" />
     <EmbeddedResource Include="Scripts\010 Drop Check Constraints.sql" />
-    <EmbeddedResource Include="Scripts\011 Drop Table Functions.sql" />
+    <EmbeddedResource Include="Scripts\011 Drop Table and Schema-Bound Functions.sql" />
     <EmbeddedResource Include="Scripts\012 Drop Calculated Columns.2000.sql" />
     <EmbeddedResource Include="Scripts\012 Drop Calculated Columns.2005.sql" />
     <EmbeddedResource Include="Scripts\100 Alter Database Collation.sql" />
@@ -157,12 +164,13 @@
     <EmbeddedResource Include="Scripts\101 Alter column Collation.2005.sql" />
     <EmbeddedResource Include="Scripts\201 Create Calculated Columns.2000.sql" />
     <EmbeddedResource Include="Scripts\201 Create Calculated Columns.2005.sql" />
-    <EmbeddedResource Include="Scripts\202 Create Table Functions.sql" />
+    <EmbeddedResource Include="Scripts\202 Create Table and Schema-Bound Functions.sql" />
     <EmbeddedResource Include="Scripts\203 Create Check Constraints.sql" />
     <EmbeddedResource Include="Scripts\204 Create Indexes + Relations.2000.sql" />
     <EmbeddedResource Include="Scripts\204 Create Indexes.2005.sql" />
-    <EmbeddedResource Include="Scripts\205 Create Ststistics.2005.sql" />
+    <EmbeddedResource Include="Scripts\205 Create Statistics.2005.sql" />
     <EmbeddedResource Include="Scripts\206 Create Relations.2005.sql" />
+    <EmbeddedResource Include="Scripts\207 Refresh Views.2005.sql" />
     <EmbeddedResource Include="Scripts\210 Enable Triggers.sql" />
     <EmbeddedResource Include="Scripts\211 Create FullText.2000.sql" />
     <EmbeddedResource Include="Scripts\211 Create FullText.2005.sql" />
@@ -173,6 +181,11 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>

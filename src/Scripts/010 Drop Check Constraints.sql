@@ -7,3 +7,4 @@ on	cs.id = o.id
 join	sysusers u
 on	u.uid = o.uid
 where 	objectproperty(cs.constid,'IsCheckCnst') = 1
+ORDER BY o.name

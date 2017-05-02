@@ -10,3 +10,4 @@ on	o2.uid = u2.uid
 where 	o1.type = 'TR' 
 and 	OBJECTPROPERTY(o1.id,'ExecIsTriggerDisabled')=0
 and 	OBJECTPROPERTY(o2.id, 'IsTable')=1
+ORDER BY	o2.name, o1.name

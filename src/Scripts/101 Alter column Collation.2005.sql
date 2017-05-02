@@ -44,6 +44,9 @@ and			objectproperty(o.object_id,'IsMSShipped')=0
 and 		c.collation_name is not null
 and			c.is_computed=0
 --and			c.collation_id <> 0
+ORDER BY
+	o.name, c.name
+
 
 open @c
 

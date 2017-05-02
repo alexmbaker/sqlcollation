@@ -54,6 +54,8 @@ where	(f.object_id in (
 				--{2} is the rebuild indexes option from application
 				OR {2} = 1)
 and		o.is_ms_shipped = 0
+ORDER BY
+	o.name, o2.name
 
 open @c
 

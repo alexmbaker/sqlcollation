@@ -11,5 +11,6 @@ on			u.schema_id = o.schema_id
 where 		o.type ='U'
 and			objectproperty(o.object_id,'IsMSShipped')=0
 and 		objectproperty(c.object_id,'IsTable')=1
+order by	o.name
 
 
