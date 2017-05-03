@@ -1,6 +1,6 @@
 using System;
 
-namespace AlterCollation
+namespace ChangeCollation
 {
     public interface IScriptExecuteCallback
     {

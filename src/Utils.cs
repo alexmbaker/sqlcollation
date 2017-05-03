@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace AlterCollation
+namespace ChangeCollation
 {
     internal class Utils
     {

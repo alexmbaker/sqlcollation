@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Data.SqlClient;
 
-namespace AlterCollation
+namespace ChangeCollation
 {
     public class ScriptStepCollection : CollectionBase
     {

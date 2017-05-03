@@ -1,4 +1,4 @@
---set up a temporary table for switing the generated script in to.
+--set up a temporary table for writing the generated script in to.
 
 USE [{0}]
 create table #sql (id int primary key identity(1,1),sql nText)

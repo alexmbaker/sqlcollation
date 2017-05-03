@@ -1,6 +1,6 @@
 using System.Data.SqlClient;
 
-namespace AlterCollation
+namespace ChangeCollation
 {
     /// <summary>
     ///     special script step that will select the results of executing a script and treat

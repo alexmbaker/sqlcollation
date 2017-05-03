@@ -1,4 +1,4 @@
-namespace AlterCollation
+namespace ChangeCollation
 {
     public enum ScriptRunState
     {
