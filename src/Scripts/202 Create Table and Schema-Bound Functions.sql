@@ -29,7 +29,7 @@ join		syscomments sc
 on			o.id = sc.id
 join		sysusers u
 on			u.uid = o.uid
-where 	o.type = 'FN'	
+where 	o.type in ('FN','TF')
 and		objectproperty(o.id,'IsMSShipped')=0 
 and
 		(
@@ -132,7 +132,7 @@ select 	case p.protecttype
 from 	sysprotects p 
 join 	sysobjects o
 on	p.id = o.id
-where 	o.type = 'FN'	
+where 	o.type in ('FN','TF')
 and		objectproperty(o.id,'IsMSShipped')=0 
 and
 		(

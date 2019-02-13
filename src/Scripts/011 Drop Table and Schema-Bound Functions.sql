@@ -5,7 +5,7 @@ select 'DROP FUNCTION  ['+ SCHEMA_NAME(u.uid) + '].['+o.name+']'
 from 	sysobjects o
 join	sysusers u
 on	o.uid = u.uid
-where o.type = 'FN'
+where o.type in ('FN','TF')
 and objectproperty(o.id,'IsMSShipped')=0 
 and
 	(
